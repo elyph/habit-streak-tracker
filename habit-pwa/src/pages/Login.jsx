@@ -33,7 +33,7 @@ export default function Login() {
           {/* small brand */}
           <div className="mb-6 flex items-center justify-center gap-2 text-sm text-muted">
             <span className="inline-flex h-9 w-9 items-center justify-center rounded-2xl border border-[rgb(var(--border)/0.75)] bg-[rgb(var(--panel)/0.35)]">
-              ✅
+              
             </span>
             <span className="tracking-tight">Habits</span>
           </div>

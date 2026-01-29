@@ -51,14 +51,14 @@ export default function AppShell() {
               </div>
 
               <div className="mt-4 space-y-1">
-                <Item to="/" icon="✅" label="Dashboard" />
+                <Item to="/" icon="" label="Dashboard" />
               </div>
 
               <button
                 onClick={onLogout}
                 className="mt-4 w-full rounded-xl border border-[rgb(var(--border)/0.75)] bg-[rgb(var(--bg)/0.35)] px-3 py-2 text-left text-sm text-[rgb(var(--muted))] transition hover:bg-[rgb(var(--accent)/0.08)] hover:text-[rgb(var(--text))]"
               >
-                🚪 Çıkış yap
+                 Çıkış yap
               </button>
 
               <div className="mt-4 border-t border-[rgb(var(--border)/0.75)] pt-4 text-xs text-muted">
