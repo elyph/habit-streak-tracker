@@ -29,7 +29,7 @@ export default function HabitsPage() {
 
   const summary = useMemo(() => {
     const total = habits.length;
-    const doneToday = habits.filter(h => (h.doneDates || []).includes(todayKey)).length;
+    const doneToday = habits.filter((h) => (h.doneDates || []).includes(todayKey)).length;
     const bestStreak = calcBestStreak(habits);
     return { total, doneToday, bestStreak };
   }, [habits, todayKey]);
@@ -43,11 +43,11 @@ export default function HabitsPage() {
   }
 
   function toggle(id) {
-    setHabits(habits.map(h => (h.id === id ? toggleDoneForToday(h) : h)));
+    setHabits(habits.map((h) => (h.id === id ? toggleDoneForToday(h) : h)));
   }
 
   function remove(id) {
-    setHabits(habits.filter(h => h.id !== id));
+    setHabits(habits.filter((h) => h.id !== id));
   }
 
   return (
@@ -55,18 +55,22 @@ export default function HabitsPage() {
       {/* header row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Habits</h1>
-          <p className="text-sm text-slate-400">Streak tracker (PWA • offline)</p>
+          <h1 className="text-3xl font-semibold tracking-tight">Habits</h1>
+          <p className="mt-1 text-sm text-muted">Streak tracker • offline-first</p>
         </div>
 
-        <form onSubmit={addHabit} className="flex gap-2">
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Yeni alışkanlık (örn: 20 dk yürüyüş)"
-            className="w-full sm:w-96 rounded-xl border border-slate-800 bg-slate-950 px-3 py-2 outline-none focus:ring-2 focus:ring-slate-600"
-          />
-          <button className="rounded-xl bg-slate-100 px-4 py-2 font-semibold text-slate-900 hover:opacity-90">
+        <form onSubmit={addHabit} className="flex w-full sm:w-auto gap-2">
+          <div className="flex w-full sm:w-[420px] items-center gap-2 rounded-2xl border border-[rgb(var(--border)/0.75)] bg-[rgb(var(--bg)/0.35)] px-3 py-2">
+            <span className="text-[rgb(var(--muted))]">＋</span>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Yeni alışkanlık ekle…"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-[rgb(var(--muted))]"
+            />
+          </div>
+
+          <button className="btn-primary rounded-2xl px-4 py-2 text-sm font-semibold shadow hover:opacity-90">
             Ekle
           </button>
         </form>
@@ -74,18 +78,16 @@ export default function HabitsPage() {
 
       {/* stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
-          <div className="text-xs text-slate-400">Habits</div>
-          <div className="mt-2 text-2xl font-bold">{summary.total}</div>
-        </div>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
-          <div className="text-xs text-slate-400">Bugün yapılan</div>
-          <div className="mt-2 text-2xl font-bold">{summary.doneToday}</div>
-        </div>
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
-          <div className="text-xs text-slate-400">En iyi seri</div>
-          <div className="mt-2 text-2xl font-bold">{summary.bestStreak}g</div>
-        </div>
+        {[
+          { label: "Toplam", value: summary.total },
+          { label: "Bugün", value: summary.doneToday },
+          { label: "En iyi seri", value: `${summary.bestStreak}g` }
+        ].map((x) => (
+          <div key={x.label} className="card rounded-2xl p-4">
+            <div className="text-xs text-muted">{x.label}</div>
+            <div className="mt-2 text-2xl font-semibold tracking-tight">{x.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* cards */}
@@ -95,33 +97,38 @@ export default function HabitsPage() {
           const doneToday = (h.doneDates || []).includes(todayKey);
 
           return (
-            <div key={h.id} className="rounded-2xl border border-slate-800 bg-slate-900/30 p-4">
+            <div
+              key={h.id}
+              className="card rounded-2xl p-4 transition hover:border-[rgb(var(--accent)/0.35)]"
+            >
               <div className="flex items-start justify-between gap-3">
-                <div>
-                  <div className="font-semibold">{h.name}</div>
-                  <div className="mt-1 text-sm text-slate-400">
-                    Seri: <b className="text-slate-200">{streak} gün</b>
+                <div className="min-w-0">
+                  <div className="font-semibold truncate">{h.name}</div>
+                  <div className="mt-1 text-sm text-muted">
+                    Seri:{" "}
+                    <b className="text-[rgb(var(--text))]">{streak} gün</b>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <button
                     className={
-                      "rounded-full px-3 py-2 text-sm border " +
+                      "rounded-xl px-3 py-2 text-sm font-medium transition ring-1 " +
                       (doneToday
-                        ? "border-emerald-700 bg-emerald-950/40 text-emerald-200"
-                        : "border-slate-700 bg-slate-950 text-slate-200 hover:bg-slate-900")
+                        ? "bg-[rgb(var(--accent)/0.14)] text-white ring-[rgb(var(--accent)/0.35)]"
+                        : "bg-[rgb(var(--bg)/0.35)] text-[rgb(var(--text))] ring-[rgb(var(--border)/0.75)] hover:bg-[rgb(var(--accent)/0.08)]")
                     }
                     onClick={() => toggle(h.id)}
                   >
                     {doneToday ? "Done ✓" : "Bugün yaptım"}
                   </button>
+
                   <button
-                    className="rounded-xl px-3 py-2 text-sm text-slate-300 hover:bg-slate-800/40"
+                    className="rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-[rgb(var(--accent)/0.08)] hover:text-[rgb(var(--text))]"
                     onClick={() => remove(h.id)}
                     title="Sil"
                   >
-                    ✕
+                    Sil
                   </button>
                 </div>
               </div>
@@ -133,7 +140,10 @@ export default function HabitsPage() {
                     <div
                       key={d}
                       title={d}
-                      className={"h-2.5 w-2.5 rounded-full " + (ok ? "bg-emerald-400" : "bg-slate-700")}
+                      className={
+                        "h-2.5 w-2.5 rounded-full ring-1 ring-[rgb(var(--border)/0.75)] " +
+                        (ok ? "bg-[rgb(var(--accent))]" : "bg-[rgb(var(--border)/0.6)]")
+                      }
                     />
                   );
                 })}
@@ -143,16 +153,16 @@ export default function HabitsPage() {
         })}
 
         {habits.length === 0 && (
-          <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900/20 p-6">
-            <h2 className="text-xl font-semibold">Start simple.</h2>
-            <p className="mt-2 text-sm text-slate-400">
+          <div className="card rounded-2xl p-6 border-dashed">
+            <h2 className="text-xl font-semibold tracking-tight">Start simple.</h2>
+            <p className="mt-2 text-sm text-muted">
               Bir alışkanlık ekle ve bugün tamamla. Seri şimdi başlıyor 👀
             </p>
           </div>
         )}
       </div>
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-muted">
         İpucu: Mobilde “Add to Home Screen” ile uygulama gibi kurabilirsin.
       </p>
     </div>

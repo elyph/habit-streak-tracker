@@ -1,0 +1,66 @@
+@layer base {
+  :root {
+    /* Your brand pinks */
+    --pink-1: 235 164 199; /* #EBA4C7 */
+    --pink-2: 191  99 145; /* #BF6391 */
+
+    /* App neutrals (dark, not too harsh) */
+    --bg:      6  8 16;   /* app background */
+    --panel:  10 12 22;   /* topbar/sidebar */
+    --card:   12 14 26;   /* cards */
+    --border: 34 36 56;   /* borders */
+
+    /* Text */
+    --text:   245 238 244; /* soft off-white */
+    --muted:  196 182 193; /* muted text */
+
+    /* Accent */
+    --accent: var(--pink-2);
+    --accent-soft: var(--pink-1);
+  }
+
+  body {
+    background: rgb(var(--bg));
+    color: rgb(var(--text));
+  }
+}
+
+@layer utilities {
+  /* Background glow (Linear-ish but pink) */
+  .app-glow {
+    background:
+      radial-gradient(900px 520px at 18% -10%, rgb(var(--accent-soft) / 0.20), transparent 60%),
+      radial-gradient(760px 460px at 92% 0%,   rgb(var(--accent)      / 0.16), transparent 55%),
+      radial-gradient(680px 420px at 60% 110%, rgb(var(--accent-soft) / 0.10), transparent 60%);
+  }
+
+  /* Reusable surfaces */
+  .panel {
+    background: rgb(var(--panel) / 0.55);
+    border: 1px solid rgb(var(--border) / 0.75);
+    backdrop-filter: blur(10px);
+  }
+
+  .card {
+    background: rgb(var(--card) / 0.55);
+    border: 1px solid rgb(var(--border) / 0.75);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Text helpers */
+  .text-muted { color: rgb(var(--muted)); }
+  .text-accent { color: rgb(var(--accent)); }
+
+  /* Buttons / inputs */
+  .btn-primary {
+    background: rgb(var(--accent));
+    color: white;
+  }
+  .btn-primary:hover { opacity: 0.92; }
+
+  .ring-accent:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(var(--accent) / 0.35);
+    border-color: rgb(var(--accent) / 0.55);
+  }
+}
