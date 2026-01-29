@@ -1,22 +1,24 @@
-const KEY = "habits_v1";
-
 export function dateKey(d = new Date()) {
   const x = new Date(d);
   x.setHours(0, 0, 0, 0);
   return x.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
-export function loadHabits() {
+function keyForUser(userId) {
+  return `habits_${userId}_v1`;
+}
+
+export function loadHabits(userId) {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(keyForUser(userId));
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 }
 
-export function saveHabits(habits) {
-  localStorage.setItem(KEY, JSON.stringify(habits));
+export function saveHabits(userId, habits) {
+  localStorage.setItem(keyForUser(userId), JSON.stringify(habits));
 }
 
 export function toggleDoneForToday(habit) {
@@ -27,8 +29,14 @@ export function toggleDoneForToday(habit) {
   return { ...habit, doneDates: [...done].sort() };
 }
 
+function percentile(arr, p) {
+  if (!arr.length) return null;
+  const s = [...arr].sort((a, b) => a - b);
+  const i = Math.floor((p / 100) * (s.length - 1));
+  return s[i];
+}
+
 export function calcStreak(doneDates) {
-  // bugün dahil geriye doğru: ardışık gün sayısı
   const done = new Set(doneDates || []);
   let streak = 0;
   let d = new Date();
@@ -50,4 +58,9 @@ export function lastNDays(n = 7) {
     d.setDate(d.getDate() - 1);
   }
   return out.reverse();
+}
+
+export function calcBestStreak(habits) {
+  const streaks = habits.map(h => calcStreak(h.doneDates));
+  return percentile(streaks, 100) ?? 0;
 }
